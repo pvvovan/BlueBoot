@@ -18,8 +18,9 @@ import java.net.UnknownHostException;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int SERVERPORT = 8035;
+    private static final int SERVER_PORT = 8035;
     private static final String SERVER_IP = "192.168.0.88";
+
     private ImageView imageView;
     Handler updateConversationHandler;
 
@@ -39,14 +40,13 @@ public class MainActivity extends AppCompatActivity {
         private Socket clientSocket;
         private DataInputStream input;//private BufferedReader input;
 
-        public CommunicationThread() {
-        }
+        public CommunicationThread() { }
 
         public void run() {
             while (!Thread.currentThread().isInterrupted()) {
                 try {
                     InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
-                    this.clientSocket  = new Socket(serverAddr, SERVERPORT);
+                    this.clientSocket  = new Socket(serverAddr, SERVER_PORT);
                     InputStream in = this.clientSocket.getInputStream();
                     this.input = new DataInputStream(in);
 
@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
                 SystemClock.sleep(30);
             }
         }
-
     }
 
     class UpdateUIThread implements Runnable {
