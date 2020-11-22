@@ -6,6 +6,8 @@
 #include <sys/socket.h>
 #include <netdb.h>
 
+#include "hwioab.h"
+
 #define BUF_SIZE (500)
 #define PORT ("8000")
 
@@ -14,7 +16,6 @@ typedef unsigned char cmd_t;
 #define CMD_MOVE  ((cmd_t)((1 << CMD_DELIM) - 1))
 #define CMD_SPEED ((cmd_t)(~CMD_MOVE))
 
-enum move_t { FORWARD, BACKWARD, LEFT, RIGHT, STOP };
 
 int get_speed(cmd_t cmd)
 {
@@ -105,7 +106,7 @@ int main(int argc, char *argv[])
 		peer_addr_len = sizeof(peer_addr);
 		nread = recvfrom(sfd, buf, BUF_SIZE, 0, (struct sockaddr *)&peer_addr, &peer_addr_len);
 		if (nread == -1) {
-				continue;               /* Ignore failed request */
+			continue;               /* Ignore failed request */
 		}
 
 		char host[NI_MAXHOST], service[NI_MAXSERV];
@@ -114,7 +115,7 @@ int main(int argc, char *argv[])
 										peer_addr_len, host, NI_MAXHOST,
 										service, NI_MAXSERV, NI_NUMERICSERV);
 		if (s == 0) {
-			printf("Received %zd bytes from %s:%s\n", nread, host, service);
+			//printf("Received %zd bytes from %s:%s\n", nread, host, service);
 		}
 		else {
 			fprintf(stderr, "getnameinfo: %s\n", gai_strerror(s));
@@ -126,7 +127,7 @@ int main(int argc, char *argv[])
 		for (int i = 0; i < nread; i++) {
 			enum move_t move = get_move(buf[i]);
 			int speed = get_speed(buf[i]);
-			fprintf(stdout, "move=%d, speed=%d\n", move, speed);
+			hwioab_output(speed, move);
 		}
 	}
 	return 0;
