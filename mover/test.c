@@ -16,7 +16,7 @@ main(int argc, char *argv[])
 	int sfd, s;
 	size_t len;
 	ssize_t nread;
-	char buf[BUF_SIZE];
+	char buf[BUF_SIZE + 2];
 
 	if (argc < 3) {
 		fprintf(stderr, "Usage: %s host port msg...\n", argv[0]);
@@ -65,12 +65,10 @@ main(int argc, char *argv[])
 		datagrams, and read responses from server */
 
 	for (int j = 3; j < argc; j++) {
-		len = strlen(argv[j]) + 1;
-				/* +1 for terminating null byte */
+		len = strlen(argv[j]);
 
 		if (len > BUF_SIZE) {
-			fprintf(stderr,
-					"Ignoring long message in argument %d\n", j);
+			fprintf(stderr, "Ignoring long message in argument %d\n", j);
 			continue;
 		}
 
@@ -84,7 +82,7 @@ main(int argc, char *argv[])
 			perror("read");
 			exit(EXIT_FAILURE);
 		}
-
+		buf[nread] = '\0';
 		printf("Received %zd bytes: %s\n", nread, buf);
 	}
 
