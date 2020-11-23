@@ -189,7 +189,26 @@ public class MainActivity extends AppCompatActivity {
             DatagramSocket client_socket = new DatagramSocket(SERVER_PORT);
             InetAddress IPAddress =  InetAddress.getByName(SERVER_IP);
             byte[] data = new byte[1];
+
             data[0] = (byte) (speed << 4);
+
+            byte cmd = 0;
+            if (up_pressed && left_pressed) { // FAST_LEFT
+                cmd = 6;
+            } else if (up_pressed && right_pressed) { // FAST_RIGHT
+                cmd = 5;
+            } else if (up_pressed) { // FORWARD
+                cmd = 1;
+            } else if (right_pressed) { // RIGHT
+                cmd = 4;
+            } else if (left_pressed) { // LEFT
+                cmd = 3;
+            } else  if (down_pressed) { // BACKWARD
+                cmd = 2;
+            }
+
+            data[0] = (byte)(data[0] | cmd);
+
             DatagramPacket send_packet = new DatagramPacket(data, 1, IPAddress, SERVER_PORT);
             client_socket.send(send_packet);
             client_socket.close();

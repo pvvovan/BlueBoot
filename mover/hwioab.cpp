@@ -45,7 +45,7 @@ namespace iohwab
 				req.move = STOP;
 				req.speed = 0;
 				this->request.store(req);
-				std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+				std::this_thread::sleep_for(std::chrono::milliseconds(300));
 			}
 		}
 	};

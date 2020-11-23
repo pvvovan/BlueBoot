@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-enum move_t { FORWARD, BACKWARD, LEFT, RIGHT, STOP };
+enum move_t { FORWARD, BACKWARD, LEFT, RIGHT, STOP, FAST_RIGHT, FAST_LEFT };
 
 void hwioab_output(int speed, enum move_t move);
 

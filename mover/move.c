@@ -42,6 +42,12 @@ enum move_t get_move(cmd_t cmd)
 		case 4:
 			move = RIGHT;
 			break;
+		case 5:
+			move = FAST_RIGHT;
+			break;
+		case 6:
+			move = FAST_LEFT;
+			break;
 		default:
 			move = STOP;
 			break;
