@@ -9,7 +9,7 @@
 #include "hwioab.h"
 
 #define BUF_SIZE (500)
-#define PORT ("8000")
+#define PORT ("8035")
 
 typedef unsigned char cmd_t;
 #define CMD_DELIM (4)

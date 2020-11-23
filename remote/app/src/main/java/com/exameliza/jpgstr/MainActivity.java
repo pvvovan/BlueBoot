@@ -18,6 +18,8 @@ import android.widget.TextView;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -36,6 +38,10 @@ public class MainActivity extends AppCompatActivity {
     Button btn_down;
     SeekBar seekBar_speed;
     int speed = 0;
+    boolean up_pressed = false;
+    boolean down_pressed = false;
+    boolean right_pressed = false;
+    boolean left_pressed = false;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -69,56 +75,84 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        CommunicationThread commThread = new CommunicationThread();
-        new Thread(commThread).start();
+        CameraThread camThread = new CameraThread();
+        new Thread(camThread).start();
+        CmdThread cmdThread = new CmdThread();
+        new Thread(cmdThread).start();
 
         btn_left.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (MotionEvent.ACTION_DOWN == event.getAction())
+                if (MotionEvent.ACTION_DOWN == event.getAction()) {
                     txtView_state.setText("left " + String.valueOf(speed));
-                else if (MotionEvent.ACTION_UP == event.getAction())
+                    left_pressed = true;
+                }
+                else if (MotionEvent.ACTION_UP == event.getAction()) {
                     txtView_state.setText("");
+                    left_pressed = false;
+                }
                 return true;
             }
         });
         btn_right.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (MotionEvent.ACTION_DOWN == event.getAction())
+                if (MotionEvent.ACTION_DOWN == event.getAction()) {
                     txtView_state.setText("right " + String.valueOf(speed));
-                else if (MotionEvent.ACTION_UP == event.getAction())
+                    right_pressed = true;
+                }
+                else if (MotionEvent.ACTION_UP == event.getAction()) {
                     txtView_state.setText("");
+                    right_pressed = false;
+                }
                 return true;
             }
         });
         btn_down.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (MotionEvent.ACTION_DOWN == event.getAction())
+                if (MotionEvent.ACTION_DOWN == event.getAction()) {
                     txtView_state.setText("down " + String.valueOf(speed));
-                else if (MotionEvent.ACTION_UP == event.getAction())
+                    down_pressed = true;
+                }
+                else if (MotionEvent.ACTION_UP == event.getAction()) {
                     txtView_state.setText("");
+                    down_pressed = false;
+                }
                 return true;
             }
         });
         btn_up.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (MotionEvent.ACTION_DOWN == event.getAction())
+                if (MotionEvent.ACTION_DOWN == event.getAction()) {
                     txtView_state.setText("up " + String.valueOf(speed));
-                else if (MotionEvent.ACTION_UP == event.getAction())
+                    up_pressed = true;
+                }
+                else if (MotionEvent.ACTION_UP == event.getAction()) {
                     txtView_state.setText("");
+                    up_pressed = false;
+                }
                 return true;
             }
         });
     }
 
-    class CommunicationThread implements Runnable {
+    class CmdThread implements Runnable {
+        public CmdThread() { }
+        public void run() {
+            while (!Thread.currentThread().isInterrupted()) {
+                send_command();
+                SystemClock.sleep(100);
+            }
+        }
+    }
+
+    class CameraThread implements Runnable {
         private Socket clientSocket;
         private DataInputStream input;//private BufferedReader input;
 
-        public CommunicationThread() { }
+        public CameraThread() { }
 
         public void run() {
             while (!Thread.currentThread().isInterrupted()) {
@@ -147,6 +181,20 @@ public class MainActivity extends AppCompatActivity {
                 SystemClock.sleep(15);
             }
         }
+    }
+
+    void send_command()
+    {
+        try {
+            DatagramSocket client_socket = new DatagramSocket(SERVER_PORT);
+            InetAddress IPAddress =  InetAddress.getByName(SERVER_IP);
+            byte[] data = new byte[1];
+            data[0] = (byte) (speed << 4);
+            DatagramPacket send_packet = new DatagramPacket(data, 1, IPAddress, SERVER_PORT);
+            client_socket.send(send_packet);
+            client_socket.close();
+        }
+        catch (IOException ignored) { }
     }
 
     class UpdateUIThread implements Runnable {
