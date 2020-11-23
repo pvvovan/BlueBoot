@@ -2,12 +2,18 @@ package com.exameliza.jpgstr;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -19,11 +25,19 @@ import java.net.UnknownHostException;
 public class MainActivity extends AppCompatActivity {
 
     private static final int SERVER_PORT = 8035;
-    private static final String SERVER_IP = "192.168.0.88";
+    private static final String SERVER_IP = "192.168.0.94";
 
     private ImageView imageView;
     Handler updateConversationHandler;
+    TextView txtView_state;
+    Button btn_left;
+    Button btn_right;
+    Button btn_up;
+    Button btn_down;
+    SeekBar seekBar_speed;
+    int speed = 0;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,9 +45,73 @@ public class MainActivity extends AppCompatActivity {
 
         imageView = (ImageView)findViewById(R.id.imageView);
         updateConversationHandler = new Handler();
+        txtView_state = (TextView)findViewById(R.id.textView_state);
+        btn_left = (Button)findViewById(R.id.btnLeft);
+        btn_down = (Button)findViewById(R.id.btnDown);
+        btn_up = (Button)findViewById(R.id.btnUp);
+        btn_right = (Button)findViewById(R.id.btnRight);
+        seekBar_speed = (SeekBar)findViewById(R.id.seekBarSpeed);
+
+        seekBar_speed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                speed = progress;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
 
         CommunicationThread commThread = new CommunicationThread();
         new Thread(commThread).start();
+
+        btn_left.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (MotionEvent.ACTION_DOWN == event.getAction())
+                    txtView_state.setText("left " + String.valueOf(speed));
+                else if (MotionEvent.ACTION_UP == event.getAction())
+                    txtView_state.setText("");
+                return true;
+            }
+        });
+        btn_right.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (MotionEvent.ACTION_DOWN == event.getAction())
+                    txtView_state.setText("right " + String.valueOf(speed));
+                else if (MotionEvent.ACTION_UP == event.getAction())
+                    txtView_state.setText("");
+                return true;
+            }
+        });
+        btn_down.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (MotionEvent.ACTION_DOWN == event.getAction())
+                    txtView_state.setText("down " + String.valueOf(speed));
+                else if (MotionEvent.ACTION_UP == event.getAction())
+                    txtView_state.setText("");
+                return true;
+            }
+        });
+        btn_up.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (MotionEvent.ACTION_DOWN == event.getAction())
+                    txtView_state.setText("up " + String.valueOf(speed));
+                else if (MotionEvent.ACTION_UP == event.getAction())
+                    txtView_state.setText("");
+                return true;
+            }
+        });
     }
 
     class CommunicationThread implements Runnable {
@@ -66,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                SystemClock.sleep(30);
+                SystemClock.sleep(15);
             }
         }
     }

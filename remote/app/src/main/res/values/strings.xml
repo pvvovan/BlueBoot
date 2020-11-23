@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">jpgStr</string>
+    <string name="camera_view">CameraView</string>
+    <string name="filled_bullet">\u30</string>
+    <string name="right">\u21DB</string>
+    <string name="left">\u21DA</string>
+    <string name="up">\u25B2</string>
+    <string name="down">\u25BC</string>
 </resources>

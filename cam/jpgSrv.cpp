@@ -87,6 +87,6 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 	}
 
 	::close(s_server_sockfd);
-	std::this_thread::sleep_for(std::chrono::milliseconds(300));
+	std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 	return 0; 
 }
