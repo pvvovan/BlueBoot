@@ -56,13 +56,14 @@ namespace iohwab
 
 			void tick() {
 				m_counter++;
-				if (m_counter == m_dc) {
-					m_pin.set(0);
-				}
 				if (m_counter == m_period) {
 					m_pin.set(1);
 					m_counter = 0;
 				}
+				if (m_counter == m_dc) {
+					m_pin.set(0);
+				}
+	
 			}
 
 			~pwm() {
@@ -145,7 +146,7 @@ namespace iohwab
 			while (!stop_required) {
 				int dc = 0;
 				auto req = this->request.load();
-				std::cout << "speed=" << req.speed  << " move=" << (int)req.move << std::endl;
+				//std::cout << "speed=" << req.speed  << " move=" << (int)req.move << std::endl;
 				switch (req.move) {
 					case FORWARD:
 						dc = static_cast<int>(static_cast<double>(req.speed) * 100 / 15);
@@ -158,7 +159,7 @@ namespace iohwab
 				req.move = STOP;
 				req.speed = 0;
 				this->request.store(req);
-				std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+				std::this_thread::sleep_for(std::chrono::milliseconds(300));
 			}
 		}
 	};
