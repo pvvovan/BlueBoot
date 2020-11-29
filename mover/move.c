@@ -9,7 +9,7 @@
 #include "hwioab.h"
 
 #define BUF_SIZE (500)
-#define PORT ("8000")
+#define PORT ("8035")
 
 typedef unsigned char cmd_t;
 #define CMD_DELIM (4)
@@ -41,6 +41,12 @@ enum move_t get_move(cmd_t cmd)
 			break;
 		case 4:
 			move = RIGHT;
+			break;
+		case 5:
+			move = FAST_RIGHT;
+			break;
+		case 6:
+			move = FAST_LEFT;
 			break;
 		default:
 			move = STOP;
