@@ -27,7 +27,7 @@ import java.net.UnknownHostException;
 public class MainActivity extends AppCompatActivity {
 
     private static final int SERVER_PORT = 8035;
-    private static final String SERVER_IP = "192.168.0.94";
+    private static final String SERVER_IP = "192.168.0.97";
 
     private ImageView imageView;
     Handler updateConversationHandler;
