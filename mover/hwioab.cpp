@@ -158,6 +158,22 @@ namespace iohwab
 						dc = static_cast<int>(static_cast<double>(req.speed) * turn_limit / max_speed);
 						drv.set_dc(0, 0, dc, dc);
 						break;
+					case LEFT:
+						dc = static_cast<int>(static_cast<double>(req.speed) * turn_limit / max_speed);
+						drv.set_dc(0, dc, 0, 0);
+						break;
+					case RIGHT:
+						dc = static_cast<int>(static_cast<double>(req.speed) * turn_limit / max_speed);
+						drv.set_dc(dc, 0, 0, 0);
+						break;
+					case FAST_RIGHT:
+						dc = static_cast<int>(static_cast<double>(req.speed) * turn_limit / max_speed);
+						drv.set_dc(dc, 0, 0, dc);
+						break;
+					case FAST_LEFT:
+						dc = static_cast<int>(static_cast<double>(req.speed) * turn_limit / max_speed);
+						drv.set_dc(0, dc, dc, 0);
+						break;
 					default:
 						drv.set_dc(0, 0, 0, 0);
 						break;
