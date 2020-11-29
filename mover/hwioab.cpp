@@ -43,9 +43,9 @@ namespace iohwab
 	class pwm {
 		gpio m_pin;
 		std::atomic<int> m_dc;
-		int m_period = 100;
 		int m_counter = 0;
 		public:
+			static constexpr int period = 100;
 			pwm(const char* pin) :
 					m_pin{pin}
 			{ }
@@ -56,7 +56,7 @@ namespace iohwab
 
 			void tick() {
 				m_counter++;
-				if (m_counter == m_period) {
+				if (m_counter == period) {
 					m_pin.set(1);
 					m_counter = 0;
 				}
@@ -142,6 +142,8 @@ namespace iohwab
 		std::atomic<cmd_t> request{};
 		std::atomic<bool> stop_required{};
 		void do_handling() {
+			constexpr double max_speed = 15.0;
+			constexpr double turn_limit = pwm::period / 2;
 			driver drv;
 			while (!stop_required) {
 				int dc = 0;
@@ -149,8 +151,12 @@ namespace iohwab
 				//std::cout << "speed=" << req.speed  << " move=" << (int)req.move << std::endl;
 				switch (req.move) {
 					case FORWARD:
-						dc = static_cast<int>(static_cast<double>(req.speed) * 100 / 15);
+						dc = static_cast<int>(static_cast<double>(req.speed) * pwm::period / max_speed);
 						drv.set_dc(dc, dc, 0, 0);
+						break;
+					case BACKWARD:
+						dc = static_cast<int>(static_cast<double>(req.speed) * turn_limit / max_speed);
+						drv.set_dc(0, 0, dc, dc);
 						break;
 					default:
 						drv.set_dc(0, 0, 0, 0);
