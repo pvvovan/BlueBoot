@@ -1,7 +1,7 @@
 all: jpgSrv
 
 jpgSrv: jpgSrv.cpp
-	g++ -Wall -Wextra -Wpedantic -std=c++17 jpgSrv.cpp -o jpgSrv
+	g++ -Wall -Wextra -Wpedantic -std=c++17 jpgSrv.cpp -o jpgSrv -lstdc++fs
 
 .PHONY: clean
 clean:
