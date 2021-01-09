@@ -57,8 +57,10 @@ namespace iohwab
 			void tick() {
 				m_counter++;
 				if (m_counter == period) {
-					m_pin.set(1);
 					m_counter = 0;
+					if (m_dc > 0) {
+						m_pin.set(1);
+					}
 				}
 				if (m_counter == m_dc) {
 					m_pin.set(0);
