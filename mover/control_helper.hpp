@@ -1,6 +1,9 @@
 #ifndef CONTROL_HELPER_HPP_
 #define CONTROL_HELPER_HPP_
 
+#include <thread>
+#include <atomic>
+
 #include "hwioab.h"
 
 namespace control_helper
