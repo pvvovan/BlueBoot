@@ -13,4 +13,3 @@ void hwioab_output(int speed, enum move_t move)
 	cmd.speed = speed;
 	iohwab::s_handler.set_cmd(cmd);
 }
-

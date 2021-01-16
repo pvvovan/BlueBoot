@@ -14,10 +14,10 @@ OBJECTS += $(CPP_SOURCES:.cpp=.o)
 vpath %.cpp $(sort $(dir $(CPP_SOURCES)))
 
 %.o: %.c Makefile
-	gcc -std=gnu18 -Wall -Wextra -Wpedantic $(C_SOURCES) -c
+	gcc -std=gnu18 -Wall -Wextra -Wpedantic $< -c
 
 %.o: %.cpp Makefile
-	g++ -std=c++17 -Wall -Wextra -Wpedantic $(CPP_SOURCES) -c
+	g++ -std=c++17 -Wall -Wextra -Wpedantic $< -c
 
 move: $(OBJECTS) Makefile
 	gcc $(OBJECTS) -o $@ -lstdc++ -lpthread -latomic
