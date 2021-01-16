@@ -42,27 +42,27 @@ namespace iohwab
 
 	class pwm {
 		gpio m_pin;
-		std::atomic<int> m_dc;
+		std::atomic<int> m_dutycycle;
 		int m_counter = 0;
 		public:
 			static constexpr int period = 100;
 			pwm(const char* pin) :
-					m_pin{pin}
+				m_pin{pin}
 			{ }
 
-			void set(int dc) {
-				this->m_dc = dc;
+			void set(int dutycycle) {
+				this->m_dutycycle = dutycycle;
 			}
 
 			void tick() {
-				m_counter++;
-				if (m_counter == period) {
+				++m_counter;
+				if (m_counter >= period) {
 					m_counter = 0;
-					if (m_dc > 0) {
+					if (m_dutycycle > 0) {
 						m_pin.set(1);
 					}
 				}
-				if (m_counter == m_dc) {
+				if (m_counter >= m_dutycycle) {
 					m_pin.set(0);
 				}
 	
