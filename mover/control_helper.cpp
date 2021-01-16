@@ -113,7 +113,7 @@ namespace control_helper
 
 	void handle::do_handling() {
 		constexpr double max_speed = 15.0;
-		constexpr double turn_limit = pwm::period / 2;
+		constexpr double turn_limit = static_cast<double>(pwm::period) / 1.3;
 		driver drv;
 		while (!stop_required) {
 			int dc = 0;
