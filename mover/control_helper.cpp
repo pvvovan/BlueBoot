@@ -13,12 +13,14 @@ namespace control_helper
 		f << pin;
 		f.flush();
 		f.close();
+		std::this_thread::sleep_for(std::chrono::milliseconds(300));
 
 		std::ofstream g;
 		g.open(std::string{"/sys/class/gpio/gpio"} + std::string{pin} + std::string{"/direction"});
 		g << "out";
 		g.flush();
 		g.close();
+		std::this_thread::sleep_for(std::chrono::milliseconds(300));
 
 		m_pin = std::string{pin};
 	}
@@ -113,7 +115,7 @@ namespace control_helper
 
 	void handle::do_handling() {
 		constexpr double max_speed = 15.0;
-		constexpr double turn_limit = static_cast<double>(pwm::period) / 1.3;
+		constexpr double turn_limit = static_cast<double>(pwm::period) / 1.0;
 		driver drv;
 		while (!stop_required) {
 			int dc = 0;

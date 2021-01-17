@@ -8,10 +8,15 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -22,12 +27,11 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int SERVER_PORT = 8035;
-    private static final String SERVER_IP = "192.168.0.97";
+    private String SERVER_IP = "192.168.10.158";
 
     private ImageView imageView;
     Handler updateConversationHandler;
@@ -42,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     boolean down_pressed = false;
     boolean right_pressed = false;
     boolean left_pressed = false;
+    EditText editText_IP;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -57,23 +62,41 @@ public class MainActivity extends AppCompatActivity {
         btn_up = (Button)findViewById(R.id.btnUp);
         btn_right = (Button)findViewById(R.id.btnRight);
         seekBar_speed = (SeekBar)findViewById(R.id.seekBarSpeed);
+        editText_IP = (EditText)findViewById(R.id.editText_IP);
 
-        seekBar_speed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                speed = progress;
-            }
+        editText_IP.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
+                    }
 
-            }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        SERVER_IP = editText_IP.getText().toString();
+                    }
 
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
+                    @Override
+                    public void afterTextChanged(Editable s) {
 
-            }
-        });
+                    }
+                    });
+
+                seekBar_speed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        speed = progress;
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                    }
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+
+                    }
+                });
 
         CameraThread camThread = new CameraThread();
         new Thread(camThread).start();
@@ -112,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (MotionEvent.ACTION_DOWN == event.getAction()) {
-                    txtView_state.setText("down " + String.valueOf(speed));
+                    txtView_state.setText("backward " + String.valueOf(speed));
                     down_pressed = true;
                 }
                 else if (MotionEvent.ACTION_UP == event.getAction()) {
@@ -126,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (MotionEvent.ACTION_DOWN == event.getAction()) {
-                    txtView_state.setText("up " + String.valueOf(speed));
+                    txtView_state.setText("forward " + String.valueOf(speed));
                     up_pressed = true;
                 }
                 else if (MotionEvent.ACTION_UP == event.getAction()) {
