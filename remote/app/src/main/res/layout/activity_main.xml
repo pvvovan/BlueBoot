@@ -79,10 +79,22 @@
         android:id="@+id/textView_state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:text="TextView"
+        android:layout_marginTop="30dp"
+        android:text="0"
         android:textSize="18sp"
         app:layout_constraintEnd_toStartOf="@+id/btnRight"
         app:layout_constraintTop_toBottomOf="@+id/btnDown" />
+
+    <EditText
+        android:id="@+id/editText_IP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="192.168.10.158"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_state" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
