@@ -9,92 +9,91 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="410dp"
-        android:layout_height="240dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:contentDescription="@string/camera_view"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@android:drawable/ic_dialog_map" />
 
     <SeekBar
         android:id="@+id/seekBarSpeed"
         style="@style/Widget.AppCompat.SeekBar.Discrete"
-        android:layout_width="276dp"
-        android:layout_height="34dp"
-        android:layout_marginTop="180dp"
-        android:layout_marginEnd="190dp"
+        android:layout_width="175dp"
+        android:layout_height="147dp"
+        android:layout_marginBottom="8dp"
         android:max="15"
         android:progress="0"
         android:rotation="270"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintBottom_toTopOf="@+id/editText_IP"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/btnRight"
         android:layout_width="76dp"
         android:layout_height="76dp"
-        android:layout_marginTop="180dp"
-        android:layout_marginEnd="28dp"
+        android:alpha="0.25"
+        android:color="@color/purple_200"
         android:text="@string/right"
         android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintBottom_toTopOf="@+id/btnDown"
+        app:layout_constraintEnd_toEndOf="@+id/imageView" />
 
     <Button
         android:id="@+id/btnDown"
         android:layout_width="76dp"
         android:layout_height="76dp"
-        android:layout_marginTop="236dp"
-        android:layout_marginEnd="104dp"
+        android:alpha="0.25"
+        android:color="@color/purple_200"
         android:text="@string/down"
         android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnRight" />
 
     <Button
         android:id="@+id/btnLeft"
         android:layout_width="76dp"
         android:layout_height="76dp"
-        android:layout_marginTop="180dp"
-        android:layout_marginEnd="180dp"
+        android:layout_marginEnd="76dp"
+        android:alpha="0.25"
+        android:color="@color/purple_200"
         android:text="@string/left"
         android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintBottom_toTopOf="@+id/btnDown"
+        app:layout_constraintEnd_toStartOf="@+id/btnRight" />
 
     <Button
         android:id="@+id/btnUp"
         android:layout_width="76dp"
         android:layout_height="76dp"
-        android:layout_marginTop="120dp"
-        android:layout_marginEnd="104dp"
+        android:alpha="0.25"
+        android:color="@color/purple_200"
         android:text="@string/up"
         android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintBottom_toTopOf="@+id/btnRight"
+        app:layout_constraintEnd_toStartOf="@+id/btnRight" />
 
     <TextView
         android:id="@+id/textView_state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:text="0"
+        android:text="00000"
         android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/btnRight"
-        app:layout_constraintTop_toBottomOf="@+id/btnDown" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <EditText
         android:id="@+id/editText_IP"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="192.168.10.158"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_state" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
