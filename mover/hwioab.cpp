@@ -8,8 +8,5 @@ namespace iohwab
 
 void hwioab_output(int speed, enum move_t move)
 {
-	control_helper::cmd_t cmd;
-	cmd.move = move;
-	cmd.speed = speed;
-	iohwab::s_handler.set_cmd(cmd);
+	iohwab::s_handler.set_cmd(control_helper::cmd_t{move, speed});
 }
