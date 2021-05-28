@@ -13,10 +13,10 @@ vpath %.c $(sort $(dir $(C_SOURCES)))
 OBJECTS += $(CPP_SOURCES:.cpp=.o)
 vpath %.cpp $(sort $(dir $(CPP_SOURCES)))
 
-%.o: %.c Makefile
+%.o: %.c %.h Makefile
 	gcc -std=gnu18 -Wall -Wextra -Wpedantic $< -c
 
-%.o: %.cpp Makefile
+%.o: %.cpp %.hpp Makefile
 	g++ -std=c++17 -Wall -Wextra -Wpedantic $< -c
 
 move: $(OBJECTS) Makefile

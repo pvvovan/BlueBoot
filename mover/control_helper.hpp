@@ -6,39 +6,40 @@
 
 #include "hwioab.h"
 
+
 namespace control_helper
 {
-	class gpio {
+	class gpio final {
 		private:
-			std::string m_pin;
+			std::string m_pin{};
 
 		public:
 			gpio(const char* pin);
 			void set(int output);
 	};
 
-	class pwm {
+	class pwm final {
 		private:
 			gpio m_pin;
-			std::atomic<int> m_dutycycle;
-			int m_counter = 0;
+			std::atomic<int> m_dutycycle{};
+			int m_counter{0};
 
 		public:
-			static constexpr int period = 100;
+			static constexpr int period{100};
 			pwm(const char* pin);
 			void set(int dutycycle);
 			void tick();
 			~pwm();
 	};
 
-	class driver {
+	class driver final {
 		private:
 			pwm o1{"22"};
 			pwm o2{"23"};
 			pwm o3{"24"};
 			pwm o4{"25"};
 			std::atomic<bool> m_stop{false};
-			std::thread m_thread;
+			std::thread m_thread{};
 
 			void work();
 
@@ -49,8 +50,8 @@ namespace control_helper
 	};
 
 	struct cmd_t {
-		enum move_t move;
-		int speed;
+		enum move_t move{};
+		int speed{};
 	};
 
 	class handle final {

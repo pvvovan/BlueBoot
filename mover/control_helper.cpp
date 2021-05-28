@@ -7,7 +7,7 @@
 
 namespace control_helper
 {
-	gpio::gpio(const char* pin) {
+	gpio::gpio(const char* pin) : m_pin{pin} {
 		std::ofstream f;
 		f.open("/sys/class/gpio/export");
 		f << pin;
@@ -21,8 +21,6 @@ namespace control_helper
 		g.flush();
 		g.close();
 		std::this_thread::sleep_for(std::chrono::milliseconds(300));
-
-		m_pin = std::string{pin};
 	}
 
 	void gpio::set(int output) {
@@ -37,9 +35,7 @@ namespace control_helper
 		f.close();
 	}
 
-	pwm::pwm(const char* pin) :
-		m_pin{pin}
-	{ }
+	pwm::pwm(const char* pin) : m_pin{pin} { }
 
 	void pwm::set(int dutycycle) {
 		this->m_dutycycle = dutycycle;
@@ -68,7 +64,7 @@ namespace control_helper
 			o2.tick();
 			o3.tick();
 			o4.tick();
-			std::this_thread::sleep_for(std::chrono::microseconds(100));
+			std::this_thread::sleep_for(std::chrono::milliseconds(10));
 			if (m_stop) {
 				break;
 			}
@@ -116,11 +112,10 @@ namespace control_helper
 	void handle::do_handling() {
 		constexpr double max_speed = 15.0;
 		constexpr double turn_limit = static_cast<double>(pwm::period) / 1.0;
-		driver drv;
+		driver drv{};
 		while (!stop_required) {
 			int dc = 0;
 			auto req = this->request.load();
-			//std::cout << "speed=" << req.speed  << " move=" << (int)req.move << std::endl;
 			switch (req.move) {
 				case FORWARD:
 					dc = static_cast<int>(static_cast<double>(req.speed) * pwm::period / max_speed);
