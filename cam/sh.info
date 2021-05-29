@@ -1,2 +1,2 @@
 mount -t tmpfs -o size=64m tmpfs ./ramdisk/
-ffmpeg -y -f v4l2 -i /dev/video0 -update 1 -r 5 ./ramdisk/output.jpg
+ffmpeg -y -f v4l2 -i /dev/video0 -update 1 -r 0.3 ./ramdisk/output.jpg
