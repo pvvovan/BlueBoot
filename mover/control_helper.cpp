@@ -64,7 +64,7 @@ namespace control_helper
 			o2.tick();
 			o3.tick();
 			o4.tick();
-			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+			std::this_thread::sleep_for(std::chrono::milliseconds(5));
 			if (m_stop) {
 				break;
 			}

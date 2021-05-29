@@ -25,7 +25,7 @@ namespace control_helper
 			int m_counter{0};
 
 		public:
-			static constexpr int period{100};
+			static constexpr int period{1};
 			pwm(const char* pin);
 			void set(int dutycycle);
 			void tick();
