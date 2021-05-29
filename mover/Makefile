@@ -18,7 +18,7 @@ vpath %.cpp $(sort $(dir $(CPP_SOURCES)))
 %.o: %.c *.h Makefile
 	$(CC) $(CC_FLAGS) -std=gnu18 $< -c
 
-%.o: %.cpp *.hpp Makefile
+%.o: %.cpp *.hpp *.h Makefile
 	$(CC) $(CC_FLAGS) -std=c++17 $< -c
 
 move: $(C_SOURCES:.c=.o) $(CPP_SOURCES:.cpp=.o) Makefile
