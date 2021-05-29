@@ -33,12 +33,12 @@ static void send_file(int sock_fd)
 {
 	std::ifstream in_file(input_file, std::ios::binary);
 	int len = static_cast<int>(std::filesystem::file_size(input_file));
-	auto mem_block = std::make_unique<char[]>(len);
+	auto mem_block = std::make_unique<char[]>(static_cast<unsigned long>(len));
 	in_file.read(mem_block.get(), len);
 	in_file.close();
 
-	::write(sock_fd, &len, sizeof(len));
-	::write(sock_fd, mem_block.get(), len);
+	[[maybe_unused]] auto err = ::write(sock_fd, &len, sizeof(len));
+	err = ::write(sock_fd, mem_block.get(), static_cast<unsigned long>(len));
 	::close(sock_fd);
 }
 
