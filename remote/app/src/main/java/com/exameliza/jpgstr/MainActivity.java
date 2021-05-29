@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                SystemClock.sleep(15);
+                SystemClock.sleep(1000);
             }
         }
     }
