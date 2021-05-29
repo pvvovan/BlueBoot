@@ -14,20 +14,14 @@
 #include <netinet/in.h>
 #include <csignal>
 #include <atomic>
+#include <sys/socket.h>
+#include <unistd.h>
+#include <netdb.h>
+#include <poll.h>
 
-static std::atomic<bool> s_stop_required;
-static std::atomic<bool> s_copying;
-static int s_server_sockfd;
-static void signal_handler([[maybe_unused]] int signum)
-{
-	std::cout << "Interrupted, closing socket..." << std::endl;
-	s_stop_required.store(true);
-	if (s_copying.load() == false) {
-//		::close(s_server_sockfd);
-	}
-}
 
 static const std::string input_file = "./ramdisk/output.jpg";
+static constexpr int BACKLOG{5};
 
 static void send_file(int sock_fd)
 {
@@ -42,51 +36,67 @@ static void send_file(int sock_fd)
 	::close(sock_fd);
 }
 
-static void error(const char* msg)
-{
-    std::cerr << msg << std::endl;
+static void error_exit(std::string msg) {
+	std::cerr << msg << std::endl;
+	std::terminate();
 }
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 {
+	int srv_fd{};
+
 	try {
-		s_stop_required.store(false);
-		// register signal SIGINT and signal handler  
-		::signal(SIGINT, signal_handler);
+		struct addrinfo hints{}, *result{nullptr}, *p_res{nullptr};
 
-		int client_sockfd;
-		struct sockaddr_in serv_addr, cli_addr;
+		::memset(&hints, 0, sizeof(hints));
+		hints.ai_canonname = nullptr;
+		hints.ai_addr = nullptr;
+		hints.ai_next = nullptr;
+		hints.ai_socktype = SOCK_STREAM;
+		hints.ai_family = AF_UNSPEC;
+		hints.ai_flags = AI_PASSIVE | AI_NUMERICSERV;
 
-		s_server_sockfd = ::socket(AF_INET, SOCK_STREAM, 0);
-		if (s_server_sockfd < 0) {
-			::error("ERROR opening socket");
-			return 1;
+		constexpr std::string_view port{"8035"};
+		if (::getaddrinfo(nullptr, port.data(), &hints, &result) != 0) {
+			::error_exit("getaddrinfo failure");
 		}
-		::bzero((char *) &serv_addr, sizeof(serv_addr));
-		constexpr int port = 8035;
-		serv_addr.sin_family = AF_INET;
-		serv_addr.sin_addr.s_addr = ::htonl(INADDR_ANY);
-		serv_addr.sin_port = ::htons(port);
-		if (::bind(s_server_sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
-			::error("ERROR on binding");
-			return 1;
-		}
-		::listen(s_server_sockfd, 5);
-		socklen_t clilen = sizeof(cli_addr);
-		for ( ; ; ) {
-			client_sockfd = ::accept(s_server_sockfd, (struct sockaddr *) &cli_addr, &clilen);
-			if (client_sockfd > 0) {
-				::send_file(client_sockfd);
+
+		int op{1};
+		for (p_res = result; p_res != nullptr; p_res = p_res->ai_next) {
+			srv_fd = ::socket(p_res->ai_family, p_res->ai_socktype,
+									p_res->ai_protocol);
+			if (srv_fd == -1) {
+				continue;
 			}
-			if (s_stop_required.load() == true) {
-				break;
+			if (::setsockopt(srv_fd, SOL_SOCKET, SO_REUSEADDR, &op, sizeof(op)) == -1) {
+				::error_exit("setsockopt failure");
+			}
+			if (::bind(srv_fd, p_res->ai_addr, p_res->ai_addrlen) == 0) {
+				break; /* Successful server */
+			}
+			::close(srv_fd); /* bind failed, try another */
+		}
+		if (p_res == nullptr) {
+			::error_exit("server socket failed");
+		}
+		if (::listen(srv_fd, BACKLOG) == -1) {
+			::error_exit("listen failure");
+		}
+		::freeaddrinfo(result);
+
+		for ( ; ; ) {
+			sockaddr_storage cl_addr;
+			unsigned int addr_len = sizeof(cl_addr);
+			int cl_fd = ::accept(srv_fd, (sockaddr *)&cl_addr, &addr_len);
+			if (cl_fd > 0) {
+				::send_file(cl_fd);
 			}
 		}
 	} catch (...) {
 		std::cerr << "Exception occurred!" << std::endl;
 	}
 
-	::close(s_server_sockfd);
-	std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+	::close(srv_fd);
+	std::this_thread::sleep_for(std::chrono::milliseconds(300));
 	return 0; 
 }
