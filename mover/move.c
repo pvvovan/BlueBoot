@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
 	}
 
 	/* Read datagrams and echo them back to sender */
-	for (;;) {
+	for ( ; ; ) {
 		peer_addr_len = sizeof(peer_addr);
 		nread = recvfrom(sfd, buf, BUF_SIZE, 0, (struct sockaddr *)&peer_addr, &peer_addr_len);
 		if (nread == -1) {
@@ -124,12 +124,12 @@ int main(int argc, char *argv[])
 			fprintf(stderr, "getnameinfo: %s\n", gai_strerror(s));
 		}
 
-		if (sendto(sfd, buf, nread, 0, (struct sockaddr *)&peer_addr, peer_addr_len) != nread) {
+		if (sendto(sfd, buf, (size_t)nread, 0, (struct sockaddr *)&peer_addr, peer_addr_len) != nread) {
 			fprintf(stderr, "Error sending response\n");
 		}
 		for (int i = 0; i < nread; i++) {
-			enum move_t move = get_move(buf[i]);
-			int speed = get_speed(buf[i]);
+			enum move_t move = get_move((cmd_t)buf[i]);
+			int speed = get_speed((cmd_t)buf[i]);
 			hwioab_output(speed, move);
 		}
 	}

@@ -7,21 +7,23 @@ control_helper.cpp
 C_SOURCES = \
 move.c
 
+CC_FLAGS = -O3 -Wall -Werror -Wextra -pedantic -pedantic-errors -Wconversion -Wsign-conversion -Werror=pedantic
+
 OBJECTS = $(C_SOURCES:.c=.o)
 vpath %.c $(sort $(dir $(C_SOURCES)))
 
 OBJECTS += $(CPP_SOURCES:.cpp=.o)
 vpath %.cpp $(sort $(dir $(CPP_SOURCES)))
 
-%.o: %.c %.h Makefile
-	clang -std=gnu18 -Wall -Wextra -Wpedantic $< -c -O3
+%.o: %.c *.h Makefile
+	$(CC) $(CC_FLAGS) -std=gnu18 $< -c
 
-%.o: %.cpp %.hpp Makefile
-	clang++ -std=c++17 -Wall -Wextra -Wpedantic $< -c -O3
+%.o: %.cpp *.hpp Makefile
+	$(CC) $(CC_FLAGS) -std=c++17 $< -c
 
-move: $(OBJECTS) Makefile
-	clang $(OBJECTS) -o $@ -lstdc++ -lpthread -latomic -O3
+move: $(C_SOURCES:.c=.o) $(CPP_SOURCES:.cpp=.o) Makefile
+	$(CC) $(OBJECTS) -o $@ -lstdc++ -lpthread -latomic -O3
 
 .PHONY: clean
 clean:
-	rm move $(OBJECTS)
+	-rm -f move $(OBJECTS)
