@@ -173,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
 
     class CameraThread implements Runnable {
         private Socket clientSocket;
-        private DataInputStream input;//private BufferedReader input;
+        private DataInputStream input;
 
         public CameraThread() { }
 
@@ -194,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
                     len = len1 + len2 * 256 + len3 * 256 * 256;
                     data = new byte[len];
                     if (len > 0) {
-                        this.input.readFully(data,0,data.length);
+                        this.input.readFully(data, 0, data.length);
                     }
                     updateConversationHandler.post(new UpdateUIThread(data));
                 } catch (IOException e) {
@@ -242,13 +242,13 @@ public class MainActivity extends AppCompatActivity {
     class UpdateUIThread implements Runnable {
         private byte[] byteArray;
 
-        public UpdateUIThread(byte[] array){
-            this.byteArray=array;
+        public UpdateUIThread(byte[] array) {
+            this.byteArray = array;
         }
 
         @Override
         public void run() {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray , 0, byteArray .length);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
             imageView.setImageBitmap(bitmap);
         }
     }
