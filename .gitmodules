@@ -1,0 +1,6 @@
+[submodule "mover/pico_w/picoprobe"]
+	path = mover/pico_w/picoprobe
+	url = https://github.com/raspberrypi/picoprobe.git
+[submodule "mover/pico_w/pico-sdk"]
+	path = mover/pico_w/pico-sdk
+	url = https://github.com/raspberrypi/pico-sdk.git
