@@ -85,3 +85,4 @@ lint/tmp/
 # lint/reports/
 
 mover/pico_w/probebuild/
+mover/pico_w/moverbuild/
