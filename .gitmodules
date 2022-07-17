@@ -4,3 +4,6 @@
 [submodule "mover/pico_w/pico-sdk"]
 	path = mover/pico_w/pico-sdk
 	url = https://github.com/raspberrypi/pico-sdk.git
+[submodule "mover/pico_w/openocd"]
+	path = mover/pico_w/openocd
+	url = https://github.com/raspberrypi/openocd.git
