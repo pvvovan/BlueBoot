@@ -5,8 +5,9 @@
 extern "C" {
 #endif
 
-enum move_t { FORWARD, BACKWARD, LEFT, RIGHT, STOP, FAST_RIGHT, FAST_LEFT };
+#include "move_cmd.h"
 
+void hwioab_init();
 void hwioab_output(int speed, enum move_t move);
 
 #ifdef __cplusplus

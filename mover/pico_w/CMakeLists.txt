@@ -15,10 +15,13 @@ pico_sdk_init()
 
 add_executable(pico_mover
 	picomover.cpp
+	../move_cmd.c
+	hwioab.cpp
 )
 
 target_include_directories(pico_mover PRIVATE
 	${CMAKE_CURRENT_LIST_DIR}
+	${CMAKE_CURRENT_LIST_DIR}/..
 )
 
 # pull in common dependencies

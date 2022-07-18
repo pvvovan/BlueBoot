@@ -5,7 +5,8 @@ hwioab.cpp \
 control_helper.cpp
 
 C_SOURCES = \
-move.c
+move.c \
+move_cmd.c
 
 OBJECTS = $(C_SOURCES:.c=.o)
 vpath %.c $(sort $(dir $(C_SOURCES)))
