@@ -7,7 +7,6 @@
 #include "move_cmd.h"
 
 
-#define BLINK_PIN	15u
 #define SSID		"wifi"
 #define PASSWORD	"password"
 
