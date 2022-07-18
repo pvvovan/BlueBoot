@@ -9,8 +9,10 @@
 #include "hwioab.h"
 #include "move_cmd.h"
 
-#define BUF_SIZE	(500)
-#define PORT 		(#UDP_SERVER_PORT)
+
+#define BUF_SIZE		(500)
+#define PORT_STRING(port)	#port
+#define PORT 			PORT_STRING(UDP_SERVER_PORT)
 
 
 int main(int argc, char *argv[])
