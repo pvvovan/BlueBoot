@@ -5,7 +5,8 @@ hwioab.cpp \
 control_helper.cpp
 
 C_SOURCES = \
-move.c
+move.c \
+move_cmd.c
 
 CC_FLAGS = -O3 -Wall -Werror -Wextra -pedantic -pedantic-errors -Wconversion -Wsign-conversion -Werror=pedantic
 

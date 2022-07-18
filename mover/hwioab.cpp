@@ -1,10 +1,13 @@
 #include "hwioab.h"
 #include "control_helper.hpp"
 
+
 namespace iohwab
 {
 	static control_helper::handle s_handler{};
 }
+
+void hwioab_init() { }
 
 void hwioab_output(int speed, enum move_t move)
 {

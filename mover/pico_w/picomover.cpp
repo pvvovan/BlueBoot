@@ -4,51 +4,14 @@
 #include "lwip/udp.h"
 #include "lwip/pbuf.h"
 
+#include "hwioab.h"
+#include "move_cmd.h"
+
 
 #define BLINK_PIN	15u
-#define UDP_SERVER_PORT	8035u
 #define SSID		"wifi"
 #define PASSWORD	"password"
 
-typedef unsigned char cmd_t;
-#define CMD_DELIM (4u)
-#define CMD_MOVE  ((cmd_t)((1u << CMD_DELIM) - 1u))
-#define CMD_SPEED ((cmd_t)(~CMD_MOVE))
-
-enum class move_t { FORWARD, BACKWARD, LEFT, RIGHT, STOP, FAST_RIGHT, FAST_LEFT };
-
-move_t get_move(cmd_t cmd)
-{
-	int id = (cmd & CMD_MOVE);
-	enum move_t move = move_t::STOP;
-	switch (id) {
-		case 0:
-			move = move_t::STOP;
-			break;
-		case 1:
-			move = move_t::FORWARD;
-			break;
-		case 2:
-			move = move_t::BACKWARD;
-			break;
-		case 3:
-			move = move_t::LEFT;
-			break;
-		case 4:
-			move = move_t::RIGHT;
-			break;
-		case 5:
-			move = move_t::FAST_RIGHT;
-			break;
-		case 6:
-			move = move_t::FAST_LEFT;
-			break;
-		default:
-			move = move_t::STOP;
-			break;
-	}
-	return move;
-}
 
 void udp_receive_callback(
 	void *arg, struct udp_pcb *upcb, struct pbuf *p, const ip_addr_t *addr, u16_t port)
@@ -74,6 +37,7 @@ void udp_receive_callback(
 int main()
 {
 	stdio_init_all();
+	hwioab_init();
 	if (cyw43_arch_init()) {
 		printf("WiFi init failed");
 		return -1;

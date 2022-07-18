@@ -7,53 +7,11 @@
 #include <netdb.h>
 
 #include "hwioab.h"
+#include "move_cmd.h"
 
-#define BUF_SIZE (500)
-#define PORT ("8035")
+#define BUF_SIZE	(500)
+#define PORT 		(#UDP_SERVER_PORT)
 
-typedef unsigned char cmd_t;
-#define CMD_DELIM (4)
-#define CMD_MOVE  ((cmd_t)((1 << CMD_DELIM) - 1))
-#define CMD_SPEED ((cmd_t)(~CMD_MOVE))
-
-
-int get_speed(cmd_t cmd)
-{
-	return (cmd & CMD_SPEED) >> CMD_DELIM;
-}
-
-enum move_t get_move(cmd_t cmd)
-{
-	int id = (cmd & CMD_MOVE);
-	enum move_t move = STOP;
-	switch (id) {
-		case 0:
-			move = STOP;
-			break;
-		case 1:
-			move = FORWARD;
-			break;
-		case 2:
-			move = BACKWARD;
-			break;
-		case 3:
-			move = LEFT;
-			break;
-		case 4:
-			move = RIGHT;
-			break;
-		case 5:
-			move = FAST_RIGHT;
-			break;
-		case 6:
-			move = FAST_LEFT;
-			break;
-		default:
-			move = STOP;
-			break;
-	}
-	return move;
-}
 
 int main(int argc, char *argv[])
 {
@@ -118,15 +76,13 @@ int main(int argc, char *argv[])
 		char host[NI_MAXHOST], service[NI_MAXSERV];
 
 		s = getnameinfo((struct sockaddr *)&peer_addr,
-										peer_addr_len, host, NI_MAXHOST,
-										service, NI_MAXSERV, NI_NUMERICSERV);
+				peer_addr_len, host, NI_MAXHOST,
+				service, NI_MAXSERV, NI_NUMERICSERV);
+
 		if (s != 0) {
 			fprintf(stderr, "getnameinfo: %s\n", gai_strerror(s));
 		}
 
-		if (sendto(sfd, buf, (size_t)nread, 0, (struct sockaddr *)&peer_addr, peer_addr_len) != nread) {
-			fprintf(stderr, "Error sending response\n");
-		}
 		for (int i = 0; i < nread; i++) {
 			enum move_t move = get_move((cmd_t)buf[i]);
 			int speed = get_speed((cmd_t)buf[i]);
