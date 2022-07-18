@@ -10,9 +10,11 @@
 #include "move_cmd.h"
 
 
-#define BUF_SIZE		(500)
-#define PORT_STRING(port)	#port
-#define PORT 			PORT_STRING(UDP_SERVER_PORT)
+#define STRINGIFY(port)			#port
+#define PORT_STRING(port)		STRINGIFY(port)
+#define PORT				PORT_STRING(UDP_SERVER_PORT)
+
+#define BUF_SIZE			(500)
 
 
 int main(int argc, char *argv[])
