@@ -5,10 +5,12 @@
 #include <array>
 
 
-static constexpr int PWM_FL{14};
-static constexpr int PWM_RL{15};
-static constexpr int PWM_RR{16};
-static constexpr int PWM_FR{17};
+static constexpr int PWM_FL {14};
+static constexpr int PWM_RL {15};
+static constexpr int PWM_RR {16};
+static constexpr int PWM_FR {17};
+
+constexpr double PWM_PERIOD {256 * 256 - 1};
 
 void hwioab_init()
 {
@@ -26,6 +28,8 @@ void hwioab_init()
 		::pwm_config_set_clkdiv(&config, 4.f);
 		// Load the configuration into our PWM slice, and set it running.
 		::pwm_init(slice_num, &config, true);
+		// Set duty cycle to 100%
+		::pwm_set_gpio_level(pin, PWM_PERIOD);
 	}
 }
 
@@ -40,8 +44,7 @@ static void set_dc(int fl, int fr, int rl, int rr)
 void hwioab_output(int speed, enum move_t move)
 {
 	constexpr double max_speed {15};
-	constexpr double pwm_period {256 * 256 - 1};
-	uint16_t dc = static_cast<uint16_t>(speed * pwm_period / max_speed);
+	uint16_t dc = static_cast<uint16_t>(PWM_PERIOD - (speed * PWM_PERIOD / max_speed));
 
 	switch (move) {
 		case FORWARD:
