@@ -48,25 +48,25 @@ void hwioab_output(int speed, enum move_t move)
 
 	switch (move) {
 		case FORWARD:
-			::set_dc(dc, dc, 0, 0);
+			::set_dc(dc, dc, PWM_PERIOD, PWM_PERIOD);
 			break;
 		case BACKWARD:
-			::set_dc(0, 0, dc, dc);
+			::set_dc(PWM_PERIOD, PWM_PERIOD, dc, dc);
 			break;
 		case LEFT:
-			::set_dc(0, dc, 0, 0);
+			::set_dc(PWM_PERIOD, dc, PWM_PERIOD, PWM_PERIOD);
 			break;
 		case RIGHT:
-			::set_dc(dc, 0, 0, 0);
+			::set_dc(dc, PWM_PERIOD, PWM_PERIOD, PWM_PERIOD);
 			break;
 		case FAST_RIGHT:
-			::set_dc(dc, 0, 0, dc);
+			::set_dc(dc, PWM_PERIOD, PWM_PERIOD, dc);
 			break;
 		case FAST_LEFT:
-			::set_dc(0, dc, dc, 0);
+			::set_dc(PWM_PERIOD, dc, dc, PWM_PERIOD);
 			break;
 		default:
-			::set_dc(0, 0, 0, 0);
+			::set_dc(PWM_PERIOD, PWM_PERIOD, PWM_PERIOD, PWM_PERIOD);
 			break;
 	}
 }
