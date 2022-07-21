@@ -26,7 +26,7 @@ namespace control_helper
 			int m_counter{0};
 
 		public:
-			static constexpr int period{1};
+			static constexpr int period{15};
 			pwm(const char* pin);
 			void set(int dutycycle);
 			void tick();
@@ -60,6 +60,7 @@ namespace control_helper
 			std::thread thr{};
 			std::atomic<cmd_t> request{};
 			std::atomic<bool> stop_required{};
+			std::atomic<int> request_cnt{};
 
 			void start();
 			void do_handling();

@@ -45,11 +45,10 @@ namespace control_helper
 		++m_counter;
 		if (m_counter >= period) {
 			m_counter = 0;
-			if (m_dutycycle > 0) {
-				m_pin.set(1);
-			}
 		}
-		if (m_counter >= m_dutycycle) {
+		if ((m_counter <= m_dutycycle) && (m_dutycycle > 0)) {
+			m_pin.set(1);
+		} else {
 			m_pin.set(0);
 		}
 	}
@@ -64,7 +63,7 @@ namespace control_helper
 			o2.tick();
 			o3.tick();
 			o4.tick();
-			std::this_thread::sleep_for(std::chrono::milliseconds(5));
+			std::this_thread::sleep_for(std::chrono::milliseconds(1));
 			if (m_stop) {
 				break;
 			}
@@ -99,6 +98,7 @@ namespace control_helper
 
 	void handle::set_cmd(cmd_t cmd) {
 		this->request.store(cmd);
+		this->request_cnt.store(0);
 	}
 
 	void handle::start() {
@@ -145,10 +145,15 @@ namespace control_helper
 					drv.set_dc(0, 0, 0, 0);
 					break;
 			}
-			req.move = STOP;
-			req.speed = 0;
-			this->request.store(req);
-			std::this_thread::sleep_for(std::chrono::milliseconds(300));
+			std::this_thread::sleep_for(std::chrono::milliseconds(100));
+			constexpr int request_timeout {10};
+			request_cnt++;
+			if (request_cnt > request_timeout) {
+				request_cnt = request_timeout;
+				req.move = STOP;
+				req.speed = 0;
+				this->request.store(req);
+			}
 		}
 	}
 }
