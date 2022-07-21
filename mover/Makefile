@@ -8,7 +8,7 @@ C_SOURCES = \
 move.c \
 move_cmd.c
 
-CC_FLAGS = -O0 -Og -g3 -Wall -Werror -Wextra -pedantic -pedantic-errors -Wconversion -Wsign-conversion -Werror=pedantic
+CC_FLAGS = -O3 -Wall -Werror -Wextra -pedantic -pedantic-errors -Wconversion -Wsign-conversion -Werror=pedantic
 
 OBJECTS = $(C_SOURCES:.c=.o)
 vpath %.c $(sort $(dir $(C_SOURCES)))

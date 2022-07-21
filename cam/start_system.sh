@@ -7,7 +7,7 @@ rl=${#ramdiskpath}
 if [[ ${rl} -gt 10 ]]
 then
 	./jpgSrv &
-	../mover/move &
+	../mover/move.elf &
 	ffmpeg -y -f v4l2 -i /dev/video0 -update 1 -r 5 ./ramdisk/output.jpg
 	kill %1
 	kill %2
