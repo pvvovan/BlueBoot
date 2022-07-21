@@ -5,6 +5,9 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <netdb.h>
+#include <signal.h>
+#include <stdatomic.h>
+#include <stdbool.h>
 
 #include "hwioab.h"
 #include "move_cmd.h"
@@ -17,8 +20,18 @@
 #define BUF_SIZE			(500)
 
 
+static atomic_bool run_required = true;
+
+void sig_handler(int sig_num)
+{
+	fprintf(stderr, "\n Caught signal number %d\n", sig_num);
+	run_required = false;
+}
+
 int main(int argc, char *argv[])
 {
+	signal(SIGINT, sig_handler);
+
 	(void)argv;
 	(void)argc;
 	struct addrinfo hints;
@@ -70,10 +83,13 @@ int main(int argc, char *argv[])
 	}
 
 	/* Read datagrams and echo them back to sender */
-	for ( ; ; ) {
+	while (run_required) {
 		peer_addr_len = sizeof(peer_addr);
-		nread = recvfrom(sfd, buf, BUF_SIZE, 0, (struct sockaddr *)&peer_addr, &peer_addr_len);
+		nread = recvfrom(
+		  sfd, buf, BUF_SIZE, MSG_DONTWAIT, (struct sockaddr *)&peer_addr, &peer_addr_len);
+
 		if (nread == -1) {
+			sleep(1);
 			continue;               /* Ignore failed request */
 		}
 
@@ -83,15 +99,14 @@ int main(int argc, char *argv[])
 				peer_addr_len, host, NI_MAXHOST,
 				service, NI_MAXSERV, NI_NUMERICSERV);
 
-		if (s != 0) {
-			fprintf(stderr, "getnameinfo: %s\n", gai_strerror(s));
-		}
-
-		for (int i = 0; i < nread; i++) {
-			enum move_t move = get_move((cmd_t)buf[i]);
-			int speed = get_speed((cmd_t)buf[i]);
-			hwioab_output(speed, move);
+		if (s == 0) {
+			for (int i = 0; i < nread; i++) {
+				enum move_t move = get_move((cmd_t)buf[i]);
+				int speed = get_speed((cmd_t)buf[i]);
+				hwioab_output(speed, move);
+			}
 		}
 	}
+	close(sfd);
 	return 0;
 }
