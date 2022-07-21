@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
 	(void)argc;
 	struct addrinfo hints;
 	struct addrinfo *result, *rp;
-	int sfd, s;
+	int sfd = -1, s;
 	struct sockaddr_storage peer_addr;
 	socklen_t peer_addr_len;
 	ssize_t nread;

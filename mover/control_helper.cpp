@@ -26,7 +26,7 @@ namespace control_helper
 	void gpio::set(int output) {
 		std::ofstream f;
 		f.open(std::string{"/sys/class/gpio/gpio"} + m_pin + std::string{"/value"});
-		if (output != 0) {
+		if (output == 1) {
 			f << "0";
 		} else {
 			f << "1";
