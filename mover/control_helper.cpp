@@ -145,8 +145,8 @@ namespace control_helper
 					drv.set_dc(0, 0, 0, 0);
 					break;
 			}
-			std::this_thread::sleep_for(std::chrono::milliseconds(100));
-			constexpr int request_timeout {10};
+			std::this_thread::sleep_for(std::chrono::milliseconds(1));
+			constexpr int request_timeout {1000};
 			request_cnt++;
 			if (request_cnt > request_timeout) {
 				request_cnt = request_timeout;

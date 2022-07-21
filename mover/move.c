@@ -89,7 +89,6 @@ int main(int argc, char *argv[])
 		  sfd, buf, BUF_SIZE, MSG_DONTWAIT, (struct sockaddr *)&peer_addr, &peer_addr_len);
 
 		if (nread == -1) {
-			sleep(1);
 			continue;               /* Ignore failed request */
 		}
 
@@ -99,12 +98,10 @@ int main(int argc, char *argv[])
 				peer_addr_len, host, NI_MAXHOST,
 				service, NI_MAXSERV, NI_NUMERICSERV);
 
-		if (s == 0) {
-			for (int i = 0; i < nread; i++) {
-				enum move_t move = get_move((cmd_t)buf[i]);
-				int speed = get_speed((cmd_t)buf[i]);
-				hwioab_output(speed, move);
-			}
+		if ((s == 0) && (nread > 0)) {
+			enum move_t move = get_move((cmd_t)buf[nread - 1]);
+			int speed = get_speed((cmd_t)buf[nread - 1]);
+			hwioab_output(speed, move);
 		}
 	}
 	close(sfd);
